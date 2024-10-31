@@ -12,6 +12,6 @@ def log_completion():
 @flow
 def end_of_run_workflow(stop_doc):
     uid = stop_doc["run_start"]
-    general_data_validation(uid)
+    general_data_validation(uid, beamline_acronym="haxpes")
     # Here is where exporters could be added
     log_completion()

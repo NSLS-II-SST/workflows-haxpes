@@ -9,7 +9,7 @@ def initialize_tiled_client():
 
 
 @task(retries=2, retry_delay_seconds=10)
-def read_all_streams(uid, beamline_acronym="ucal"):
+def read_all_streams(uid, beamline_acronym="haxpes"):
     logger = get_run_logger()
     tiled_client = initialize_tiled_client()
     run = tiled_client[beamline_acronym]["raw"][uid]
@@ -27,5 +27,5 @@ def read_all_streams(uid, beamline_acronym="ucal"):
 
 
 @flow
-def general_data_validation(uid, beamline_acronym="ucal"):
+def general_data_validation(uid, beamline_acronym="haxpes"):
     read_all_streams(uid, beamline_acronym)
