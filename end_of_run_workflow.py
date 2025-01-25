@@ -14,5 +14,5 @@ def log_completion():
 def end_of_run_workflow(stop_doc):
     uid = stop_doc["run_start"]
     general_data_validation(uid, beamline_acronym="haxpes")
-    export_switchboard(uid)
+    export_switchboard(uid, beamline_acronym="haxpes")
     log_completion()

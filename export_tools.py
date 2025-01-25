@@ -1,4 +1,5 @@
 from numpy import column_stack, transpose
+from tiled.client import from_profile
 
 def get_proposal_path(run):
     proposal = run.start.get("proposal", {}).get("proposal_id", None)
@@ -98,3 +99,7 @@ def make_header(metadata,datatype):
         pass
     
     return header
+
+def initialize_tiled_client(beamline_acronym):
+    return from_profile("nsls2")[beamline_acronym]['raw']
+

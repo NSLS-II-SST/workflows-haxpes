@@ -1,14 +1,11 @@
-from file_exporter import export_peak_xps
+from file_exporter import peak_export
 #from export_tools import get_proposal_path
-from prefect import flow
-
-from tiled.client import from_profile
-catalog = from_profile("nsls2")['haxpes']['raw']
+from prefect import flow, get_run_logger
 
 @flow
-def export_switchboard(uid):
-    run = catalog[uid]
-    
+def export_switchboard(uid,beamline_acronym="haxpes"):
+    logger = get_run_logger()
+
     if run.start['autoexport']:
         if run.start['scantype'] == "xps":
-            export_peak_xps(run)
+            peak_export(uid)
