@@ -1,4 +1,4 @@
-from file_exporter import peak_export
+from file_exporter import peak_export, xas_export
 #from export_tools import get_proposal_path
 from prefect import flow, get_run_logger
 from export_tools import initialize_tiled_client
@@ -11,3 +11,5 @@ def export_switchboard(uid,beamline_acronym="haxpes"):
     if run.start['autoexport']:
         if run.start['scantype'] == "xps":
             peak_export(uid)
+        if run.start['scantype'] == "xas":
+            xas_export(uid)
