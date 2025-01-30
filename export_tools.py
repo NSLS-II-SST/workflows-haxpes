@@ -62,14 +62,14 @@ def get_general_metadata(run):
     metadata['FloodGun Emission'] = get_baseline_config(run,'FloodGun','Iemis')
     metadata['FloodGun Grid Voltage'] = get_baseline_config(run,'FloodGun','Vgrid')
     
-    metadata['HSlit Gap'] = get_baseline('HAXPES slits_hsize')
-    metadata['HSlit Center'] = get_baseline('HAXPES slits_hcenter')
-    metadata['VSlit Gap'] = get_baseline('HAXPES slits_vsize')
-    metadata['VSlit Center'] = get_baseline('HAXPES slits_vcenter')
-    metadata['Sample X'] = get_baseline('haxpes_manipulator_x')
-    metadata['Sample Y'] = get_baseline('haxpes_manipulator_y')
-    metadata['Sample Z'] = get_baseline('haxpes_manipulator_z')
-    metadata['Sample Rotation'] = get_baseline('haxpes_manipulator_r')
+    metadata['HSlit Gap'] = get_baseline(run,'HAXPES slits_hsize')
+    metadata['HSlit Center'] = get_baseline(run,'HAXPES slits_hcenter')
+    metadata['VSlit Gap'] = get_baseline(run,'HAXPES slits_vsize')
+    metadata['VSlit Center'] = get_baseline(run,'HAXPES slits_vcenter')
+    metadata['Sample X'] = get_baseline(run,'haxpes_manipulator_x')
+    metadata['Sample Y'] = get_baseline(run,'haxpes_manipulator_y')
+    metadata['Sample Z'] = get_baseline(run,'haxpes_manipulator_z')
+    metadata['Sample Rotation'] = get_baseline(run,'haxpes_manipulator_r')
 
     return metadata    
 
@@ -85,7 +85,7 @@ def get_metadata_xps(run):
     metadata['I0 Integration Time'] = str(run.primary.descriptors[0]['configuration']['I0 ADC']['data']['I0 ADC_exposure_time'])
     metadata['I0 Data'] = str(run.primary.read()["I0 ADC"].data)
 
-    metadata['Excitation Energy'] = get_baseline('SST2 Energy_energy')
+    metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
 
     metadata['Number of Sweeps'] = str(run.primary.read()['PeakAnalyzer_xaxis'].data.shape[0])
 
