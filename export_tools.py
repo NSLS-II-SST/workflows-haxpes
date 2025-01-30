@@ -56,7 +56,7 @@ def get_general_metadata(run):
     metadata['Sample Name'] = get_md(run,'sample_name')
     metadata['Sample Description'] = get_md(run,'sample_description')
     metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
-    metadata['Undulator Harmonic'] = get_baseline_config(run,'SST Energy','harmonic')
+    metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')
 
     metadata['FloodGun Energy'] = get_baseline_config(run,'FloodGun','energy')
     metadata['FloodGun Emission'] = get_baseline_config(run,'FloodGun','Iemis')
