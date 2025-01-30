@@ -124,11 +124,25 @@ def make_header(metadata,datatype):
             header = header+", Dimension"+str(n)
         header = header+"\n"
     elif datatype == "xas":
-        pass
+        header = header+'\n'
+        header = header+'-----------------------------------------\n'
+        header = header+'Energy, I0, Drain, SMU_Drain, Transmission\n'
+        
     else:
         pass
     
     return header
+
+def get_xas_data(run):
+    I0dat = run.primary.read()['I0 ADC'].data
+    Itransdat = run.primary.read()['I1 ADC'].data
+    Idraindat = run.primary.read()['Sample Drain Current'].data
+    IK2600 = run.primary.read()['K2600_current'].data
+    enarray = run.primary.read()['SST2 Energy_energy'].data
+
+    data_array = column_stack((enarray,I0dat,Idraindat,IK2600,Itransdat))
+
+    return data_array
 
 def initialize_tiled_client(beamline_acronym):
     return from_profile("nsls2")[beamline_acronym]['raw']
