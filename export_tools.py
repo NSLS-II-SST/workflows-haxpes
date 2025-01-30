@@ -22,7 +22,7 @@ def get_md(run,md_key,default="Unknown"):
         return default
 
 def get_baseline(run,md_key,default="Unknown"):
-    if md_key in run.baseline.keys():
+    if md_key in run.baseline.data.keys():
         return str(run.baseline.data[md_key].read().mean())
     else:
         return default
