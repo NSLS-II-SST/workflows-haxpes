@@ -8,8 +8,9 @@ def export_switchboard(uid,beamline_acronym="haxpes"):
     logger = get_run_logger()
     c = initialize_tiled_client(beamline_acronym)
     run = c[uid]
-    if run.start['autoexport']:
-        if run.start['scantype'] == "xps":
-            peak_export(uid)
-        if run.start['scantype'] == "xas":
-            xas_export(uid)
+    if run.start['scantype'] == "xps":
+        peak_export(uid)
+    elif run.start['scantype'] == "xas":
+        xas_export(uid)
+    elif run.start['autoexport']:
+        return
