@@ -41,7 +41,7 @@ def export_xas(uid, beamline_acronym="haxpes"):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
     filename = export_path+"XAS_scan"+str(run.start['scan_id'])+".csv"
-    logger.info('Exporting XAS Data")
+    logger.info('Exporting XAS Data')
     np.savetxt(filename,data,delimiter=',',header=header)
 
 
