@@ -32,8 +32,9 @@ def export_xas(uid, beamline_acronym="haxpes"):
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
+    detlist = run.start['detectors']
     metadata = get_general_metadata(run)
-    header = make_header(metadata,"xas")
+    header = make_header(metadata,"xas",detlist=detlist)
     data = get_xas_data(run)
 
     export_path = get_proposal_path(run)+"XAS_export/"
