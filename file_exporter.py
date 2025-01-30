@@ -26,5 +26,5 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     np.savetxt(filename,data,delimiter=',',header=header)
 
 @flow
-def peak_export(uid, beamline_acronym="haxpes")
+def peak_export(uid, beamline_acronym="haxpes"):
     export_peak_xps(uid, beamline_acronym)
