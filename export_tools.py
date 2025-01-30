@@ -143,7 +143,7 @@ def get_xas_data(run):
     detlist = run.start['detectors']
     for det in detlist:
         if det == "PeakAnalyzer":
-            pass
+            data_array = column_stack((data_array,run.primary.read()['PeakAnalyzer_total_counts'].data))
         else:
             data_array = column_stack((data_array,run.primary.read()[det].data))
     return data_array
