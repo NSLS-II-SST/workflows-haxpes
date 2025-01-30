@@ -107,7 +107,7 @@ def get_data_xps(run):
 
     return data_array
 
-def make_header(metadata,datatype):
+def make_header(metadata,datatype,detlist=None):
     """
     compiles metadata into a header for data export.  Datatype should be "xps" or "xas"
     """
@@ -126,7 +126,11 @@ def make_header(metadata,datatype):
     elif datatype == "xas":
         header = header+'\n'
         header = header+'-----------------------------------------\n'
-        header = header+'Energy, I0, Drain, SMU_Drain, Transmission\n'
+        header = header+'Energy'
+        if detlist != None:
+            for det in detlist:
+                header = header+", "+det.replace(" ","_")   
+        header = header+"\n"
         
     else:
         pass
@@ -134,14 +138,14 @@ def make_header(metadata,datatype):
     return header
 
 def get_xas_data(run):
-    I0dat = run.primary.read()['I0 ADC'].data
-    Itransdat = run.primary.read()['I1 ADC'].data
-    Idraindat = run.primary.read()['Sample Drain Current'].data
-    IK2600 = run.primary.read()['K2600_current'].data
-    enarray = run.primary.read()['SST2 Energy_energy'].data
+    data_array = run.primary.read()['SST2 Energy_energy'].data
 
-    data_array = column_stack((enarray,I0dat,Idraindat,IK2600,Itransdat))
-
+    detlist = run.start['detectors']
+    for det in detlist:
+        if det == "PeakAnalyzer":
+            pass
+        else:
+            data_array = column_stack((data_array,run.primary.read()[det].data))
     return data_array
 
 def initialize_tiled_client(beamline_acronym):

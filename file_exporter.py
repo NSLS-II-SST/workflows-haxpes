@@ -36,7 +36,7 @@ def export_xas(uid, beamline_acronym="haxpes"):
     header = make_header(metadata,"xas")
     data = get_xas_data(run)
 
-    export_path = get_proosal_path(run)+"XAS_export/"
+    export_path = get_proposal_path(run)+"XAS_export/"
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
