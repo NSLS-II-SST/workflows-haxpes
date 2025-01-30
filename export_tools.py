@@ -28,7 +28,7 @@ def get_baseline(run,md_key,default="Unknown"):
         return default
 
 def get_baseline_config(run,device,md_key,default="Unknown"):
-    fullkey = str(dev+"_"+md_key)
+    fullkey = str(device+"_"+md_key)
     if fullkey in run.baseline.config[device].keys():
         return str(run.baseline.config[device][fullkey].read()[0])
     else:
