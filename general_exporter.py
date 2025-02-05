@@ -12,8 +12,9 @@ def export_switchboard(uid,beamline_acronym="haxpes"):
         #need to add generic exporter
 #        return
     if 'scantype' in run.start.keys():
-        if run.start['scantype'] == "xps":
-            peak_export(uid)
-        elif run.start['scantype'] == "xas":
-            xas_export(uid)
+        if run.stop['exit_status'] != "abort":
+            if run.start['scantype'] == "xps":
+                peak_export(uid)
+            elif run.start['scantype'] == "xas":
+                xas_export(uid)
 
