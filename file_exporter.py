@@ -49,7 +49,7 @@ def export_xas(uid, beamline_acronym="haxpes"):
 def export_generic_1D(uid, beamline_acronym="haxpes"):
     logger = get_run_logger()
 
-    catalog = initialize_tiled_client(beamline_acrotnym)
+    catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
     detlist = run.start['detectors']
