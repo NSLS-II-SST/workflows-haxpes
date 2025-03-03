@@ -12,8 +12,8 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
-    #metadata = get_metadata_xps(run)
-    #header = make_header(metadata,"xps")
+    #metadata = get_metadata_xps(run) #temporary turn off header
+    #header = make_header(metadata,"xps") #temporary turn off header
     data = get_data_xps(run)
     export_path = get_proposal_path(run)+"XPS_export/"
     #export_path = "/home/xf07id1/Documents/UserFiles/live/LiveData/XPS_export/"
@@ -34,8 +34,8 @@ def export_xas(uid, beamline_acronym="haxpes"):
     run = catalog[uid]
 
     detlist = run.start['detectors']
-    metadata = get_general_metadata(run)
-    header = make_header(metadata,"xas",detlist=detlist)
+    #metadata = get_general_metadata(run) #temporary turn off header
+    #header = make_header(metadata,"xas",detlist=detlist) #temporary turn off header
     data = get_xas_data(run)
 
     export_path = get_proposal_path(run)+"XAS_export/"
