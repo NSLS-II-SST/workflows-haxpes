@@ -12,8 +12,8 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
-    metadata = get_metadata_xps(run)
-    header = make_header(metadata,"xps")
+    #metadata = get_metadata_xps(run)
+    #header = make_header(metadata,"xps")
     data = get_data_xps(run)
     export_path = get_proposal_path(run)+"XPS_export/"
     #export_path = "/home/xf07id1/Documents/UserFiles/live/LiveData/XPS_export/"
@@ -23,7 +23,8 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
         makedirs(export_path)
     filename = export_path+"XPS_scan"+str(run.start['scan_id'])+".csv"
     logger.info("Exporting Peak XPS Data")
-    np.savetxt(filename,data,delimiter=',',header=header)
+    #np.savetxt(filename,data,delimiter=',',header=header)
+    np.savetxt(filename,data,delimiter=",")
 
 @task(retries=2, retry_delay_seconds=10)
 def export_xas(uid, beamline_acronym="haxpes"):
