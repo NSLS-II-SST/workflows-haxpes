@@ -99,7 +99,7 @@ def get_metadata_xps(run):
 
     metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
 
-    metadata['Number of Sweeps'] = get_md('sweeps')
+    metadata['Number of Sweeps'] = get_md(run,'sweeps')
 
     return metadata
 
