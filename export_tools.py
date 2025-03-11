@@ -99,7 +99,7 @@ def get_metadata_xps(run):
 
     metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
 
-    metadata['Number of Sweeps'] = str(run.primary.read()['PeakAnalyzer_xaxis'].data.shape[0])
+    metadata['Number of Sweeps'] = get_md('sweeps')
 
     return metadata
 
