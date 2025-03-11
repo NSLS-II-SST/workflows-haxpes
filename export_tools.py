@@ -154,6 +154,11 @@ def make_header(metadata,datatype,detlist=None):
     
     return header
 
+def write_header_only(fpath,header):
+    fobj = open(fpath,'w')
+    fobj.write(header)
+    fobj.close()
+
 def get_xas_data(run):
     data_array = run.primary.read()['SST2 Energy_energy'].data
 

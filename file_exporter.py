@@ -19,10 +19,35 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
-    filename = export_path+"XPS_scan"+str(run.start['scan_id'])+".csv"
+    if "export_filename" in run.start.keys() and run.start['export_filename']:
+        fbase = export_filename
+    else:
+        fbase = "XPS_scan"
+    filename = export_path+fbase+str(run.start['scan_id'])+".csv"
     logger.info("Exporting Peak XPS Data")
     np.savetxt(filename,data,delimiter=',',header=header)
     
+
+def export_ses_xps(uid, beamline_acronym="haxpes"):
+    logger = get_run_logger()
+
+    catalog = initialize_tiled_client(beamline_acronym)
+    run = catalog[uid]
+
+    metadata = get_metadata_xps(run)
+    header = make_header(metadata,"xps")
+    export_path = get_proposal_path(run)+"XPS_export/"
+    if not exists(export_path):
+        logger.info(f"Export path does not exist, making {export_path}")
+        makedirs(export_path)
+    if "export_filename" in run.start.keys() and run.start['export_filename']:
+        fbase = export_filename
+    else:
+        fbase = "XPS_scan"
+    filename = export_path+fbase+str(run.start['scan_id'])+".csv"
+    logger.info("Exporting SES XPS Data")
+    write_header_only(filename,header)
+
 
 @task(retries=2, retry_delay_seconds=10)
 def export_xas(uid, beamline_acronym="haxpes"):
