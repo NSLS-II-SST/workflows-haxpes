@@ -100,3 +100,7 @@ def peak_export(uid, beamline_acronym="haxpes"):
 @flow
 def generic_export(uid, beamline_acronym="haxpes"):
     export_generic_1D(uid, beamline_acronym)
+
+@flow
+def ses_export(uid,beamline_acronym="haxpes"):
+    export_ses_xps(uid, beamline_acronym)
