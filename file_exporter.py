@@ -27,7 +27,7 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     logger.info("Exporting Peak XPS Data")
     np.savetxt(filename,data,delimiter=',',header=header)
     
-
+@task(retries=2, retry_delay_seconds=10)
 def export_ses_xps(uid, beamline_acronym="haxpes"):
     logger = get_run_logger()
 

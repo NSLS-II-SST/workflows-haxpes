@@ -86,10 +86,13 @@ def get_metadata_xps(run):
 
     metadata = get_general_metadata(run)
 
-    peak_config = run.primary.descriptors[0]['configuration']['PeakAnalyzer']['data']
-    for peakkey in peak_config.keys():
-        out_key = peakkey.replace("_"," ")
-        metadata[out_key] = str(peak_config[peakkey])
+    try:
+        peak_config = run.primary.descriptors[0]['configuration']['PeakAnalyzer']['data']
+        for peakkey in peak_config.keys():
+            out_key = peakkey.replace("_"," ")
+            metadata[out_key] = str(peak_config[peakkey])
+    except KeyError:
+        metadata['Peak Analyzer'] = "Not Used"
 
     metadata['I0 Integration Time'] = str(run.primary.descriptors[0]['configuration']['I0 ADC']['data']['I0 ADC_exposure_time'])
     metadata['I0 Data'] = str(run.primary.read()["I0 ADC"].data)
