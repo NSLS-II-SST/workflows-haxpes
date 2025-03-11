@@ -12,8 +12,8 @@ def export_switchboard(uid,beamline_acronym="haxpes"):
                 if run.start['scantype'] == "xps":
                     if run.start['analyzer_type'] == "peak":
                         peak_export(uid)
-                    #elif run.start['analyzer_type'] == "ses":
-                        #...
+                    elif run.start['analyzer_type'] == "ses":
+                        ses_export(uid)
                 elif run.start['scantype'] == "xas":
                     xas_export(uid)
     else:
