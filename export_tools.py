@@ -16,7 +16,7 @@ def get_proposal_path(run):
 
 def get_ses_path(run):
     base_path = get_proposal_path(run)
-    ses_path = base_path+"/assets/haxpes_ses/"
+    ses_path = base_path+"assets/haxpes-ses/"
     return ses_path
 
 def get_md(run,md_key,default="Unknown"):
