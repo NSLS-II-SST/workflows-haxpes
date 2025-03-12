@@ -21,11 +21,7 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
-    if "export_filename" in run.start.keys() and run.start['export_filename']:
-        fbase = export_filename
-    else:
-        fbase = "XPS_scan"
-    filename = export_path+fbase+str(run.start['scan_id'])+".csv"
+    filename = export_path+generate_file_name(run,'csv')
     logger.info("Exporting Peak XPS Data")
     np.savetxt(filename,data,delimiter=',',header=header)
     
@@ -44,10 +40,6 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
-    if "export_filename" in run.start.keys() and run.start['export_filename']:
-        fbase = export_filename
-    else:
-        fbase = "XPS_scan"
     filename = generate_file_name(run,'md')
     out_path = export_path+filename
     logger.info("Exporting SES XPS Data")
@@ -75,7 +67,7 @@ def export_xas(uid, beamline_acronym="haxpes"):
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
-    filename = export_path+"XAS_scan"+str(run.start['scan_id'])+".csv"
+    filename = export_path+generate_file_name(run,'csv')
     logger.info('Exporting XAS Data')
     np.savetxt(filename,data,delimiter=',',header=header)
 
@@ -95,7 +87,7 @@ def export_generic_1D(uid, beamline_acronym="haxpes"):
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
-    filename = export_path+"Scan_"+str(run.start['scan_id'])+".csv"
+    filename = export_path+generate_file_name(run,'csv')
     logger.info('Exporting General Data')
     np.savetxt(filename,data,delimiter=',',header=header)
 
