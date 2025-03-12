@@ -216,6 +216,10 @@ def generate_file_name(run,extension):
 
     #would be nice to have photon energy for XPS, but don't know how to make that work for both soft and tender yet
     N = run.start['scan_id']
+
+    if extension[0] == ".":
+        extension = extension[1:]
+
     fn = f"{S}_{N}.{extension}"
     return fn
          

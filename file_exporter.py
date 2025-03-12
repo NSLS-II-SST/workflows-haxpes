@@ -1,7 +1,7 @@
 from export_tools import *
 import numpy as np
 from os import makedirs
-from os.path import exists
+from os.path import exists, splitext
 import shutil
 from glob import glob
 
@@ -48,12 +48,14 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
         fbase = export_filename
     else:
         fbase = "XPS_scan"
-    filename = export_path+fbase+str(scan_id)+".md"
+    filename = generate_file_name(run,'md')
     logger.info("Exporting SES XPS Data")
     write_header_only(filename,header)
     ses_files = glob(f"{ses_path}*_{scan_id}_*")
     for ses_file in ses_files:
-        shutil.copy(ses_file,export_path)
+        ext = splitext(ses_file)[1]
+        out_path = generate_file_name(run,ext)
+        shutil.copy(ses_file,out_path)
 
 
 @task(retries=2, retry_delay_seconds=10)
