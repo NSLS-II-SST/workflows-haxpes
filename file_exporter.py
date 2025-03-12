@@ -49,12 +49,13 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
     else:
         fbase = "XPS_scan"
     filename = generate_file_name(run,'md')
+    out_path = export_path+filename
     logger.info("Exporting SES XPS Data")
-    write_header_only(filename,header)
+    write_header_only(out_path,header)
     ses_files = glob(f"{ses_path}*_{scan_id}_*")
     for ses_file in ses_files:
         ext = splitext(ses_file)[1]
-        out_path = generate_file_name(run,ext)
+        out_path = export_path+generate_file_name(run,ext)
         shutil.copy(ses_file,out_path)
 
 
