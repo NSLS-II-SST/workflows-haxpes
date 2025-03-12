@@ -1,5 +1,6 @@
 from numpy import column_stack, transpose
 from tiled.client import from_profile
+import re
 
 def get_proposal_path(run):
     proposal = run.start.get("proposal", {}).get("proposal_id", None)
@@ -13,7 +14,10 @@ def get_proposal_path(run):
         proposal_path = f"/nsls2/data/sst/proposals/{cycle}/pass-{proposal}/"
     return proposal_path
 
-
+def get_ses_path(run):
+    base_path = get_proposal_path(run)
+    ses_path = base_path+"/assets/haxpes_ses/"
+    return ses_path
 
 def get_md(run,md_key,default="Unknown"):
     if md_key in run.start.keys():
@@ -194,4 +198,52 @@ def get_generic_1d_data(run):
 
 def initialize_tiled_client(beamline_acronym):
     return from_profile("nsls2")[beamline_acronym]['raw']
+
+def generate_file_name(run,extension):
+    """ generates a file name from the metadata in the run.  
+    If an export filename is given, the filename will be <ExportFileName>_<ScanID>.
+    Otherwise filenames will be <SampleName>_<ScanID>.
+    If no export filename or sample name is given, filename will be Scan_<ScanID>.
+    """
+    S = ""
+    if 'export_filename' in run.start.keys() and run.start['export_filename']:
+        S = S+run.start['export_filename']
+    elif 'sample_name' in run.start.keys():
+        S = S+run.start['sample_name']
+    S = sanitize_filename(S)
+    if S == "":
+        S = "Scan"
+
+    #would be nice to have photon energy for XPS, but don't know how to make that work for both soft and tender yet
+    N = run.start['scan_id']
+    fn = f"{S}_{N}.{extension}"
+    return fn
+         
+def sanitize_filename(filename):
+    """
+    Sanitize a filename by removing/replacing invalid characters. Avoids wrecking
+    either Windows or Linux paths.
+
+    Eliminates any characters that aren't alphanumeric, period, hyphen, underscore, forward slash, colon, or backslash
+    Replaces multiple hyphens with a single hyphen
+    Replaces whitespace and multiple underscores with a single underscore
+
+    Parameters
+    ----------
+    filename : str
+        The filename to sanitize
+
+    Returns
+    -------
+    str
+        The sanitized filename with invalid characters removed/replaced
+    """
+    # Replace any characters that aren't alphanumeric, period, hyphen, underscore, forward slash, colon, or backslash
+    filename = re.sub(r"[^\w\s\-\./:\\]", "", filename)
+    # Replace multiple hyphens with single hyphen
+    filename = re.sub(r"-+", "-", filename)
+    # Replace whitespace and multiple underscores with single underscore
+    filename = re.sub(r"[_\s]+", "_", filename)
+    return filename
+
 

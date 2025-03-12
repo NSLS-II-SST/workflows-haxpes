@@ -2,6 +2,8 @@ from export_tools import *
 import numpy as np
 from os import makedirs
 from os.path import exists
+import shutil
+from glob import glob
 
 from prefect import get_run_logger, task, flow
 
@@ -37,6 +39,8 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
     metadata = get_metadata_xps(run)
     header = make_header(metadata,"xps")
     export_path = get_proposal_path(run)+"XPS_export/"
+    ses_path = get_ses_path(run)
+    scan_id = run.start['scan_id']
     if not exists(export_path):
         logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
@@ -44,9 +48,12 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
         fbase = export_filename
     else:
         fbase = "XPS_scan"
-    filename = export_path+fbase+str(run.start['scan_id'])+".csv"
+    filename = export_path+fbase+str(scan_id)+".md"
     logger.info("Exporting SES XPS Data")
     write_header_only(filename,header)
+    ses_files = glob(f"{ses_path}*_{scan_id}_*")
+    for ses_file in ses_files:
+        shutil.copy(ses_file,export_path)
 
 
 @task(retries=2, retry_delay_seconds=10)
