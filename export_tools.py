@@ -58,9 +58,10 @@ def get_general_metadata(run):
     metadata['Scan ID'] = get_md(run,'scan_id')
     metadata['SAF'] = get_md(run,'saf')
     metadata['Sample Name'] = get_md(run,'sample_name')
-    metadata['Sample Description'] = get_md(run,'sample_description')
+    metadata['Sample Description'] = get_md(run,'sample_desc')
     metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
     metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')
+    metadata['Comment'] = get_md(run,'comment')
 
     if len(run.start['hints']['dimensions']) == 1:
         if len(run.start['hints']['dimensions'][0][0]) == 1:
