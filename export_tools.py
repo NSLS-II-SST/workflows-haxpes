@@ -44,7 +44,7 @@ def get_photon_energy(run,default=0):
         if beamselect == "Tender":
             en = round(run.baseline.data['SST2 Energy_energy'].read().mean(),2)
         elif beamselect == "Soft":
-            en = round(run.baseline.data['en_energy'].read.mean(),2) 
+            en = round(run.baseline.data['en_energy'].read().mean(),2) 
         else:
             en = default
     else:
@@ -151,10 +151,11 @@ def get_mono_md(run):
         if beamselect == "Tender":
             metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
             metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')            
-#        elif beamselect == "Soft":
-#            metadata['Grating'] = get_baseline_config(??????????)
-#            metadata['Undulator Harmonic'] = get_baseline_config(??????????)
-#            metadata['M2 Pos.'] = get_baseline_config(?????????????)
+        elif beamselect == "Soft":
+            metadata['CFF'] = get_baseline_config(run,'en','monoen_cff')
+            metadata['Grating'] = get_baseline_config(run,'en','monoen_gratingx_setpoint')
+            metadata['Mirror2'] = get_baseline_config(run,'en','monoen_mirror2x_setpoint')
+            metadata['Undulator Harmonic'] = get_baseline_config(run,'en','harmonic')
     return md
 
 def make_header(metadata,datatype,detlist=None):
