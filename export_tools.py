@@ -144,7 +144,7 @@ def get_mono_md(run):
     checks if SST-1 or SST-2, then gets correct md.
     if beamselect is not in md, returns nothing
     """
-    md = {}
+    metadata = {}
 
     if 'beam_selection' in run.baseline.data.keys():
         beamselect = run.baseline.data['beam_selection'].read()[0]
