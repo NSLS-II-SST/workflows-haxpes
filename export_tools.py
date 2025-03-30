@@ -37,16 +37,30 @@ def get_baseline_config(run,device,md_key,default="Unknown"):
         return str(run.baseline.config[device][fullkey].read()[0])
     else:
         return default
-        
+
+def get_photon_energy(run,default=0):
+    if 'beam_selection' in run.baseline.data.keys():
+        beamselect = run.baseline.data['beam_selection'].read()[0]
+        if beamselect == "Tender":
+            en = round(run.baseline.data['SST2 Energy_energy'].read().mean(),2)
+        elif beamselect == "Soft":
+            en = round(run.baseline.data['en_energy'].read.mean(),2) 
+        else:
+            en = default
+    else:
+        en = default
+    return str(en)
+    
+
+def get_scantype(run):
+    if "scantype" in run.start.keys():
+        return run.start['scantype']
+    else:
+        return None        
 
 def get_general_metadata(run):
 
-    metadata = {}
-    #beamline setup:
-        # slit positions, L1 & L2 positions, nBPM position, DCM crystal, harmonic
-    #sample info:
-        # sample positions, 
-    #KE / BE 
+    metadata = get_mono_md(run)
     
     try:
         metadata['Proposal'] = str(run.start['proposal']['proposal_id'])
@@ -59,8 +73,8 @@ def get_general_metadata(run):
     metadata['SAF'] = get_md(run,'saf')
     metadata['Sample Name'] = get_md(run,'sample_name')
     metadata['Sample Description'] = get_md(run,'sample_desc')
-    metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
-    metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')
+#    metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
+#    metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')
     metadata['Comment'] = get_md(run,'comment')
 
     if len(run.start['hints']['dimensions']) == 1:
@@ -102,7 +116,8 @@ def get_metadata_xps(run):
     metadata['I0 Integration Time'] = str(run.primary.descriptors[0]['configuration']['I0 ADC']['data']['I0 ADC_exposure_time'])
     metadata['I0 Data'] = str(run.primary.read()["I0 ADC"].data)
 
-    metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
+#    metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
+    metadata['Excitation Energy'] = get_photon_energy(run)
 
     metadata['Number of Sweeps'] = get_md(run,'sweeps')
 
@@ -123,6 +138,24 @@ def get_data_xps(run):
     data_array = column_stack((energy_axis,edc))
 
     return data_array
+
+def get_mono_md(run):
+    """
+    checks if SST-1 or SST-2, then gets correct md.
+    if beamselect is not in md, returns nothing
+    """
+    md = {}
+
+    if 'beam_selection' in run.baseline.data.keys():
+        beamselect = run.baseline.data['beam_selection'].read()[0]
+        if beamselect == "Tender":
+            metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
+            metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')            
+#        elif beamselect == "Soft":
+#            metadata['Grating'] = get_baseline_config(??????????)
+#            metadata['Undulator Harmonic'] = get_baseline_config(??????????)
+#            metadata['M2 Pos.'] = get_baseline_config(?????????????)
+    return md
 
 def make_header(metadata,datatype,detlist=None):
     """
@@ -202,8 +235,6 @@ def initialize_tiled_client(beamline_acronym):
 
 def generate_file_name(run,extension):
     """ generates a file name from the metadata in the run.  
-    If an export filename is given, the filename will be <ExportFileName>_<ScanID>.
-    Otherwise filenames will be <SampleName>_<ScanID>.
     If no export filename or sample name is given, filename will be Scan_<ScanID>.
     """
     S = ""
@@ -218,10 +249,25 @@ def generate_file_name(run,extension):
     #would be nice to have photon energy for XPS, but don't know how to make that work for both soft and tender yet
     N = run.start['scan_id']
 
+    if run.start['scantype'] == "xps":
+        EC = "_"
+        en = get_photon_energy(run)
+        if en != "0":
+            EC = EC+f"{en}eV_"
+        cl = get_md(run,'core_line')
+        if cl != "Unknown":
+            EC = EC+f"{cl}"
+    elif run.start['scantype'] == "xas":
+        cl = get_md(run,'edge')
+        EC = f"_{cl}"
+    else:
+        EC = ""
+
+
     if extension[0] == ".":
         extension = extension[1:]
 
-    fn = f"{S}_{N}.{extension}"
+    fn = f"{S}{EC}_{N}.{extension}"
     return fn
          
 def sanitize_filename(filename):
