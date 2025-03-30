@@ -156,7 +156,7 @@ def get_mono_md(run):
             metadata['Grating'] = get_baseline_config(run,'en','monoen_gratingx_setpoint')
             metadata['Mirror2'] = get_baseline_config(run,'en','monoen_mirror2x_setpoint')
             metadata['Undulator Harmonic'] = get_baseline_config(run,'en','harmonic')
-    return md
+    return metadata
 
 def make_header(metadata,datatype,detlist=None):
     """
