@@ -42,9 +42,9 @@ def get_photon_energy(run,default=0):
     if 'beam_selection' in run.baseline.data.keys():
         beamselect = run.baseline.data['beam_selection'].read()[0]
         if beamselect == "Tender":
-            en = round(run.baseline.data['SST2 Energy_energy'].read().mean(),2)
+            en = round(run.baseline.data['SST2 Energy_energy'].read().mean(),1)
         elif beamselect == "Soft":
-            en = round(run.baseline.data['en_energy'].read().mean(),2) 
+            en = round(run.baseline.data['en_energy'].read().mean(),1) 
         else:
             en = default
     else:
@@ -116,7 +116,6 @@ def get_metadata_xps(run):
     metadata['I0 Integration Time'] = str(run.primary.descriptors[0]['configuration']['I0 ADC']['data']['I0 ADC_exposure_time'])
     metadata['I0 Data'] = str(run.primary.read()["I0 ADC"].data)
 
-#    metadata['Excitation Energy'] = get_baseline(run,'SST2 Energy_energy')
     metadata['Excitation Energy'] = get_photon_energy(run)
 
     metadata['Number of Sweeps'] = get_md(run,'sweeps')
@@ -156,6 +155,7 @@ def get_mono_md(run):
             metadata['Grating'] = get_baseline_config(run,'en','monoen_gratingx_setpoint')
             metadata['Mirror2'] = get_baseline_config(run,'en','monoen_mirror2x_setpoint')
             metadata['Undulator Harmonic'] = get_baseline_config(run,'en','harmonic')
+            metadata['Exit Slit Gap'] = get_baseline(run,'Exit Slit AB')
     return metadata
 
 def make_header(metadata,datatype,detlist=None):
