@@ -149,7 +149,8 @@ def get_mono_md(run):
         beamselect = run.baseline.data['beam_selection'].read()[0]
         if beamselect == "Tender":
             metadata['Mono Crystal'] = get_baseline_config(run,'SST2 Energy','mono_crystal')
-            metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')            
+            metadata['Undulator Harmonic'] = get_baseline_config(run,'SST2 Energy','harmonic')
+            metadata['Filter Position'] = get_baseline(run,'nBPM Filter')            
         elif beamselect == "Soft":
             metadata['CFF'] = get_baseline_config(run,'en','monoen_cff')
             metadata['Grating'] = get_baseline_config(run,'en','monoen_gratingx_setpoint')
