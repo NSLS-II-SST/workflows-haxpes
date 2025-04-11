@@ -5,12 +5,7 @@ from os.path import exists, splitext
 import shutil
 from glob import glob
 
-from prefect import get_run_logger, task, flow
-
-@task(retries=2, retry_delay_seconds=10)
 def export_peak_xps(uid, beamline_acronym="haxpes"):
-    logger = get_run_logger()
-
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
@@ -19,16 +14,11 @@ def export_peak_xps(uid, beamline_acronym="haxpes"):
     data = get_data_xps(run)
     export_path = get_proposal_path(run)+"XPS_export/"
     if not exists(export_path):
-        logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
     filename = export_path+generate_file_name(run,'csv')
-    logger.info("Exporting Peak XPS Data")
     np.savetxt(filename,data,delimiter=',',header=header)
     
-@task(retries=2, retry_delay_seconds=10)
 def export_ses_xps(uid, beamline_acronym="haxpes"):
-    logger = get_run_logger()
-
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
@@ -38,11 +28,9 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
     ses_path = get_ses_path(run)
     scan_id = run.start['scan_id']
     if not exists(export_path):
-        logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
     filename = generate_file_name(run,'md')
     out_path = export_path+filename
-    logger.info("Exporting SES XPS Data")
     write_header_only(out_path,header)
     ses_files = glob(f"{ses_path}*_{scan_id}_*")
     for ses_file in ses_files:
@@ -51,10 +39,7 @@ def export_ses_xps(uid, beamline_acronym="haxpes"):
         shutil.copy(ses_file,out_path)
 
 
-@task(retries=2, retry_delay_seconds=10)
 def export_xas(uid, beamline_acronym="haxpes"):
-    logger = get_run_logger()
-
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
@@ -65,16 +50,11 @@ def export_xas(uid, beamline_acronym="haxpes"):
 
     export_path = get_proposal_path(run)+"XAS_export/"
     if not exists(export_path):
-        logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
     filename = export_path+generate_file_name(run,'csv')
-    logger.info('Exporting XAS Data')
     np.savetxt(filename,data,delimiter=',',header=header)
 
-@task(retries=2, retry_delay_seconds=10)
 def export_generic_1D(uid, beamline_acronym="haxpes"):
-    logger = get_run_logger()
-
     catalog = initialize_tiled_client(beamline_acronym)
     run = catalog[uid]
 
@@ -85,24 +65,8 @@ def export_generic_1D(uid, beamline_acronym="haxpes"):
 
     export_path = get_proposal_path(run)+"GeneralExport/"
     if not exists(export_path):
-        logger.info(f"Export path does not exist, making {export_path}")
         makedirs(export_path)
     filename = export_path+generate_file_name(run,'csv')
-    logger.info('Exporting General Data')
     np.savetxt(filename,data,delimiter=',',header=header)
 
-@flow
-def xas_export(uid, beamline_acronym="haxpes"):
-    export_xas(uid,beamline_acronym)
 
-@flow
-def peak_export(uid, beamline_acronym="haxpes"):
-    export_peak_xps(uid, beamline_acronym)
-
-@flow
-def generic_export(uid, beamline_acronym="haxpes"):
-    export_generic_1D(uid, beamline_acronym)
-
-@flow
-def ses_export(uid,beamline_acronym="haxpes"):
-    export_ses_xps(uid, beamline_acronym)

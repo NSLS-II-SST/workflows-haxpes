@@ -1,6 +1,6 @@
-from file_exporter import peak_export, xas_export, generic_export, ses_export
+from file_exporter import export_xas, export_peak_xps, export_generic_1D, export_ses_xps
 #from export_tools import get_proposal_path
-#from prefect import flow, get_run_logger
+from prefect import flow
 from export_tools import initialize_tiled_client
 
 def export_switchboard(uid,beamline_acronym="haxpes"):
@@ -20,3 +20,19 @@ def export_switchboard(uid,beamline_acronym="haxpes"):
         if run.start['autoexport']:
             generic_export(uid)
 
+
+@flow
+def xas_export(uid, beamline_acronym="haxpes"):
+    export_xas(uid,beamline_acronym)
+
+@flow
+def peak_export(uid, beamline_acronym="haxpes"):
+    export_peak_xps(uid, beamline_acronym)
+
+@flow
+def generic_export(uid, beamline_acronym="haxpes"):
+    export_generic_1D(uid, beamline_acronym)
+
+@flow
+def ses_export(uid,beamline_acronym="haxpes"):
+    export_ses_xps(uid, beamline_acronym)
