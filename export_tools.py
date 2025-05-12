@@ -258,7 +258,7 @@ def generate_file_name(run,extension):
     #would be nice to have photon energy for XPS, but don't know how to make that work for both soft and tender yet
     N = run.start['scan_id']
 
-    if run.start['scantype'] == "xps":
+    if 'scantype' in run.start.keys() and run.start['scantype'] == "xps":
         EC = "_"
         en = get_photon_energy(run)
         if en != "0":
@@ -266,7 +266,7 @@ def generate_file_name(run,extension):
         cl = get_md(run,'core_line')
         if cl != "Unknown":
             EC = EC+f"{cl}"
-    elif run.start['scantype'] == "xas":
+    elif 'scantype' in run.start.keys() and run.start['scantype'] == "xas":
         cl = get_md(run,'edge')
         EC = f"_{cl}"
     else:
