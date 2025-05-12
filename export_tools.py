@@ -25,9 +25,12 @@ def get_md(run,md_key,default="Unknown"):
     else:
         return default
 
-def get_baseline(run,md_key,default="Unknown"):
+def get_baseline(run,md_key,default="Unknown",firstonly=False):
     if md_key in run.baseline.data.keys():
-        return str(run.baseline.data[md_key].read().mean())
+        if firstonly:
+            return str(run.baseline.data[md_key].read()[0])
+        else:
+            return str(run.baseline.data[md_key].read().mean())
     else:
         return default
 
@@ -90,6 +93,10 @@ def get_general_metadata(run):
     metadata['FloodGun Emission'] = get_baseline_config(run,'FloodGun','Iemis')
     metadata['FloodGun Grid Voltage'] = get_baseline_config(run,'FloodGun','Vgrid')
     
+    metadata['L1 Stripe'] = get_baseline(run,'L1_stripe',firstonly=True)
+    metadata['L2 Mirror'] = get_baseline(run,'L2_mirror_type',firstonly=True)
+    metadata['L2 Stripe'] = get_baseline(run,'L2_stripe',firstonly=True)
+
     metadata['HSlit Gap'] = get_baseline(run,'HAXPES slits_hsize')
     metadata['HSlit Center'] = get_baseline(run,'HAXPES slits_hcenter')
     metadata['VSlit Gap'] = get_baseline(run,'HAXPES slits_vsize')
