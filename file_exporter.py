@@ -4,6 +4,7 @@ from os import makedirs
 from os.path import exists, splitext
 import shutil
 from glob import glob
+import h5py
 
 def export_peak_xps(uid, beamline_acronym="haxpes"):
     catalog = initialize_tiled_client(beamline_acronym)
@@ -69,4 +70,34 @@ def export_generic_1D(uid, beamline_acronym="haxpes"):
     filename = export_path+generate_file_name(run,'csv')
     np.savetxt(filename,data,delimiter=',',header=header)
 
+def export_resPES(uid, beamline_acronym="haxpes"):
+    catalog = initialize_tiled_client(beamline_acronym)
+    run = catalog[uid]
 
+    data_dictionary = get_resPES_data(run)
+
+    export_path = get_proposal_path(run)+"ResPES/"
+    if not exists(export_path):
+        makedirs(export_path)
+    filename = export_path+generate_file_name(run,'h5')
+    
+    f = h5py.File(filename,'a')
+
+    datagroup = f.create_group("DataSets")
+    for key, value in data_dictionary["DataSets"].items():
+        ds = datagroup.create_dataset(key,data=value)
+
+    specgroup = f.create_group("Signals")
+    for key, value in data_dictionary["Signals"].items():
+        s = specgroup.create_dataset(key,data=value)
+        s.attrs['X Axis'] = "Photon Energy"
+
+    axisgroup = f.create_group("PlotAxes")
+    for key, value in data_dictionary["Axes"].items():
+        a = axisgroup.create_dataset(key,data=value)
+
+    metagroup = f.create_group("Meta")
+    for key, value in data_dictionary["Metadata"].items():
+        metagroup.attrs[key] = value
+
+    f.close()
