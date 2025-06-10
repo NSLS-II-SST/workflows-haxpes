@@ -343,7 +343,7 @@ def get_resPES_data(run):
     hv = run.primary.read()[en_key].data.reshape(n_hv,n_sweep)
     hv = hv.mean(axis=1)
 
-    sweep = run.primary.read()['Exposure Motor'].data.reshape(n_hv,n_sweep) #check motor name
+    sweep = run.primary.read()['Exposure'].data.reshape(n_hv,n_sweep) #check motor name
     sweep = sweep.mean(axis=0)
 
     KE = run.primary.read()['PeakAnalyzer_xaxis'].data.reshape(n_hv,n_sweep,n_KE)
